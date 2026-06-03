@@ -9,12 +9,12 @@ WORKDIR /app
 FROM ${REGISTRY}/dotnet/aspnet:10.0 AS build
 WORKDIR /src
 
-COPY  *.slnx ./
-COPY ["FreakyFashionAPI/FreakyFashion.csproj", "./"]
-COPY ["FreakyFashionAPI/DomainLayer.csproj", "./"]
-COPY ["FreakyFashionAPI/ApplicationLayer.csproj", "./"]
-COPY ["FreakyFashionAPI/RepositoriesDependencyInjectionProject.csproj", "./"]
-COPY ["FreakyFashionAPI/InfrastructureLayer.csproj", "./"]
+COPY *.slnx ./
+COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/"]
+COPY ["DomainLayer/DomainLayer.csproj", "DomainLayer/"]
+COPY ["ApplicationLayer/ApplicationLayer.csproj", "ApplicationLayer/"]
+COPY ["RepositoriesDependencyInjectionProject/RepositoriesDependencyInjectionProject.csproj", "RepositoriesDependencyInjectionProject/"]
+COPY ["InfrastructureLayer/InfrastructureLayer.csproj", "InfrastructureLayer/"]
 
 RUN dotnet restore "FreakyFashion.csproj"
 
