@@ -1,0 +1,29 @@
+﻿@model FreakyFashionClient.Models.UserSubmissionModel
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <h1 class="display-4">Login here</h1>
+</div>
+<div>
+
+    <h2>Sign in or sign up </h2>
+
+    <!-- The asp-action points directly to the [HttpPost] endpoint in your controller -->
+    <form asp-action="SubmitData" method="post">
+        <div>
+            <label>Name:</label>
+            <!-- asp-for binds this input to the UserName property -->
+            <input asp-for="@Model.UserName" class="form-control" />
+        </div>
+        <br />
+        <div>
+            <label>Password:</label>
+            <!-- asp-for binds this input to the UserEmail property -->
+            <input asp-for="@Model.PassWord" type="text" class="form-control" />
+        </div>
+        <br />
+        <!-- The submit button sends the data package to the endpoint -->
+        <button type="submit">Sign in</button>
+    </form>
+</div>

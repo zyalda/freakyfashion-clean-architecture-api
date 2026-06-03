@@ -1,0 +1,37 @@
+﻿@model FreakyFashionClient.Models.DashboardViewModel
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["title"]</h1>
+</div>
+
+<div>
+    <!-- The asp-action points directly to the [HttpPost] endpoint in your controller -->
+    <form asp-action="SubmitUpdateProduct" method="post" enctype="multipart/form-data">
+
+        <div>
+            <label>Token:</label>
+            <input asp-for="@Model.UserManagerResponseModel.AccessToken" value="@Model.UserManagerResponseModel.AccessToken" class="form-control" />
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.EntityModel.Id" value="@Model.EntityModel.Id" class="form-control" />
+        </div>
+        <div>
+            <label>Name:</label>
+            <input asp-for="@Model.EntityModel.Name" value="@Model.EntityModel.Name" class="form-control" />
+        </div>
+        <div>
+            <label>Description:</label>
+            <input asp-for="@Model.EntityModel.Description" value="@Model.EntityModel.Description" class="form-control" />
+        </div>
+        <div>
+            <label>Price:</label>
+            <input asp-for="@Model.EntityModel.Price" value="@Model.EntityModel.Price" class="form-control" />
+        </div>
+        <div>
+            <label>UrlSlug:</label>
+            <input asp-for="@Model.EntityModel.UrlSlug" value="@Model.EntityModel.UrlSlug" class="form-control" />
+        </div>
+        <br />
+        <button type="submit">Update</button>
+    </form>
+</div>

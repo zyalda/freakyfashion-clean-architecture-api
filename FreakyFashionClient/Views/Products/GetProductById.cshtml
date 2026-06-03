@@ -1,0 +1,40 @@
+﻿@model FreakyFashionClient.Models.DashboardViewModel
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["title"]</h1>
+</div>
+<div>
+
+    <div>
+        @ViewData["NotFound"]
+    </div>
+    <br />
+    <form asp-action="SubmitGetProductById" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Id:</label>
+            <input asp-for="@Model.EntityModel.Id"  class="form-control" />
+        </div>
+        <br />
+        <button type="submit">Get product</button>
+    </form>
+
+    @if(@Model.EntityModel.Id > 0)
+    {
+        <div>
+            <div>
+                <label class="form-control">@Model.EntityModel.Name</label>
+            </div>
+            <div>
+                <label class="form-control">@Model.EntityModel.Description</label>
+            </div>
+            <div>
+                <label class="form-control">@Model.EntityModel.Price</label>
+            </div>
+            <div>
+                <label class="form-control">@Model.EntityModel.Image</label>
+            </div>
+            <div>
+               <label class="form-control">@Model.EntityModel.UrlSlug</label>
+            </div>
+        </div>
+    }

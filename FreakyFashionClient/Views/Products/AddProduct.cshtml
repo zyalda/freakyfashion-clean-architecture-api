@@ -1,0 +1,46 @@
+﻿@model FreakyFashionClient.Models.DashboardViewModel
+
+ <h5>@ViewData["header"]</h5>
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["title"]</h1>
+</div>
+<div>
+
+    <!-- The asp-action points directly to the [HttpPost] endpoint in your controller -->
+    <form asp-action="SubmitProduct" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Token:</label>
+            <!-- asp-for binds this input to the Name property -->
+            <input asp-for="@Model.UserManagerResponseModel.AccessToken" class="form-control" />
+        </div>
+        <div>
+            <label>Name:</label>
+            <!-- asp-for binds this input to the Name property -->
+            <input asp-for="@Model.EntityModel.Name" class="form-control" />
+        </div>
+        <div>
+            <label>Description:</label>
+            <input asp-for="@Model.EntityModel.Description" type="text" class="form-control" />
+        </div>
+        <div>
+            <label>Price:</label>
+            <input asp-for="@Model.EntityModel.Price" type="text" class="form-control" />
+        </div>
+        <div>
+            <label>Image:</label>
+            <input asp-for="@Model.EntityModel.ImageFile" type="file" class="form-control" asp-for="ProductModel.FileProperty" />
+        </div>
+        <div>
+            <label>UrlSlug:</label>
+            <input asp-for="@Model.EntityModel.UrlSlug" type="text" class="form-control" />
+        </div>
+        <div>
+            <label>Category:</label>
+            <input asp-for="@Model.EntityModel.Category" type="text" class="form-control" />
+        </div>
+        <br />
+        <!-- The submit button sends the data package to the endpoint -->
+        <button type="submit">Add</button>
+    </form>
+</div>

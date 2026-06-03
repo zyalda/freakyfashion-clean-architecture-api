@@ -1,0 +1,77 @@
+﻿@* @model FreakyFashionClient.Models.DashboardViewModel
+
+<h5>@ViewData["header"]</h5>
+
+@if (!string.IsNullOrEmpty(@Model.UserManagerResponseModel.AccessToken))
+{
+    <ul>
+        <li>@Model.UserManagerResponseModel.AccessToken</li>
+        <li>@Model.UserManagerResponseModel.TokenType</li>
+        <li>@Model.UserManagerResponseModel.ExpiresIn</li>
+    </ul>
+}
+
+<h3>@ViewData["Title"]</h3>
+<ul>
+    @foreach (var product in Model.PagedResponse.Products)
+    {
+         
+        <li><h4>product: @product.Id</h4></li>        
+        <li>@product.Name</li>       
+        <li>@product.Description</li>      
+        <li>@product.Price</li>        
+        <li>@product.Image</li>        
+        <li>@product.UrlSlug</li>        
+
+        <li><form method="post">
+            <input type="hidden" asp-for="@Model.UserManagerResponseModel.AccessToken" value="@Model.UserManagerResponseModel.AccessToken" />
+            <input type="hidden" asp-for="@Model.EntityModel.Id" value="@product.Id" />
+            <input type="hidden" asp-for="@Model.EntityModel.Name" value="@product.Name" />
+            <input type="hidden" asp-for="@Model.EntityModel.Description" value="@product.Description" />
+            <input type="hidden" asp-for="@Model.EntityModel.Price" value="@product.Price" />
+            <input type="hidden" asp-for="@Model.EntityModel.Image" value="@product.Image" />
+            <input type="hidden" asp-for="@Model.EntityModel.UrlSlug" value="@product.UrlSlug" />
+            <button type="submit" asp-action="Update">Update</button>
+            <button type="submit" asp-action="SubmitDeleteProduct"
+                    onclick="return confirm('Are you sure you want to delete @product.Name with Id = @product.Id?');">Delete</button>
+            </form>
+        </li>
+        
+    }
+</ul>
+
+<div>
+    <!-- Pagination Nav Controls -->
+    @if (Model.PagedResponse.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                
+                <!-- Previous Button -->
+                <li class="page-item @(Model.PagedResponse.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PagedResponse.CurrentPage - 1)"
+                       asp-route-pageSize="@Model.PagedResponse.PageSize">Previous</a>
+                </li>
+
+                <!-- Page Number Links -->
+                @for (int i = 1; i <= Model.PagedResponse.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PagedResponse.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-pageSize="@Model.PagedResponse.PageSize">@i</a>
+                    </li>
+                }
+
+                <!-- Next Button -->
+                <li class="page-item @(Model.PagedResponse.HasNextPage ? "" : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PagedResponse.CurrentPage + 1)"
+                       asp-route-pageSize="@Model.PagedResponse.PageSize">Next</a>
+                </li>
+                
+            </ul>
+        </nav>
+    }
+</div> *@

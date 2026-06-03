@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Project Path="ApplicationLayer/ApplicationLayer.csproj" />
+  <Project Path="DomainLayer/DomainLayer.csproj" />
+  <Project Path="FreakyFashion/FreakyFashion.csproj" />
+  <Project Path="FreakyFashionClient/FreakyFashionClient.csproj" />
+  <Project Path="InfrastructureLayer/InfrastructureLayer.csproj" />
+  <Project Path="RepositoriesDependencyInjectionProject/RepositoriesDependencyInjectionProject.csproj" />
+</Solution>

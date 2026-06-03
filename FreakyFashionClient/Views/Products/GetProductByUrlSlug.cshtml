@@ -1,0 +1,35 @@
+﻿@model FreakyFashionClient.Models.DashboardViewModel
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["title"]</h1>
+</div>
+<div>
+
+    <div>
+        @ViewData["NotFound"]
+    </div>
+    <br />
+    <form asp-action="SubmitGetProductByUrlSlug" method="post" enctype="multipart/form-data">
+        <div>
+            <label>UrlSlug:</label>
+            <input asp-for="@Model.EntityModel.UrlSlug" class="form-control" />
+        </div>
+        <br />
+        <button type="submit">Get products</button>
+    </form>
+    
+    @if(Model.EntityModelList.Count() > 0)
+    {
+        <ul>
+        @foreach (var product in Model.EntityModelList)
+        {
+         
+            <li><h4>product: @product.Id</h4></li>        
+            <li>@product.Name</li>       
+            <li>@product.Description</li>      
+            <li>@product.Price</li>        
+            <li>@product.Image</li>        
+            <li>@product.UrlSlug</li>
+        }
+        </ul>
+    }

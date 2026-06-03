@@ -1,0 +1,87 @@
+@FreakyFashion_HostAddress = https://localhost:3000
+
+POST {{FreakyFashion_HostAddress}}/api/Login
+Accept: application/json
+userName: test
+passWord: passTest
+
+###
+
+GET {{FreakyFashion_HostAddress}}/api/Products/GetAllProducts
+Accept: application/json
+
+###
+GET {{FreakyFashion_HostAddress}}/api/Products/GetProductById
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzkzODYzOTksImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCJ9.lED-r10TKfcGLeX5VRbrdgSKea7opsCQ1Z8_MI3rRQs
+Accept: application/json
+id: 1
+
+###
+GET {{FreakyFashion_HostAddress}}/api/Products/GetAllProductBySlug
+Accept: application/json
+slug: black-eyeShadow
+
+# ###
+POST {{FreakyFashion_HostAddress}}/api/Products/AddProduct
+Content-Type: application/json
+name: foundation
+description: Lorem ipsum dolor
+image: imagefromfile
+urlSlug:foundation
+category: foundation
+price: 449
+
+###
+
+PATCH {{FreakyFashion_HostAddress}}/api/Products/UpdateProduct
+Content-Type: application/json
+Content-Type: application/json-patch+json
+id: 1
+
+[
+  { "op": "replace", "path": "/price", "value": -333}
+]
+
+###
+Post {{FreakyFashion_HostAddress}}/api/Products/DeleteProduct
+Content-Type: application/json
+id: 2
+
+###Category
+
+GET {{FreakyFashion_HostAddress}}/api/Category/GetAllCategories
+Accept: application/json
+
+###
+GET {{FreakyFashion_HostAddress}}/api/Category/GetCategoryById
+Content-Type: application/json
+id: 7
+
+###
+GET {{FreakyFashion_HostAddress}}/api/Category/GetAllCategoryBySlug
+Accept: application/json
+slug: black-eyeShadow
+
+###
+
+POST {{FreakyFashion_HostAddress}}/api/Category/AddCategory
+Content-Type: application/json
+name: Mascara
+image: imagefromfile
+urlSlug: black-mascara
+
+###
+
+PATCH {{FreakyFashion_HostAddress}}/api/Category/UpdateCategory
+Content-Type: application/json
+Content-Type: application/json-patch+json
+id: 6
+
+[
+  {"op": "replace", "path": "/name", "value": "blueeyeShadow"}
+]
+
+###
+Post {{FreakyFashion_HostAddress}}/api/Category/DeleteCategory
+Content-Type: application/json
+id: 8
