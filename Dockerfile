@@ -9,7 +9,7 @@ WORKDIR /app
 FROM ${REGISTRY}/dotnet/aspnet:10.0 AS build
 WORKDIR /src
 
-COPY *.slnx ./
+COPY  *.slnx ./
 COPY ["FreakyFashionAPI/FreakyFashion.csproj", "./"]
 COPY ["FreakyFashionAPI/DomainLayer.csproj", "./"]
 COPY ["FreakyFashionAPI/ApplicationLayer.csproj", "./"]
