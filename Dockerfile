@@ -10,22 +10,22 @@ FROM ${REGISTRY}/dotnet/aspnet:10.0 AS build
 WORKDIR /src
 
 COPY *.slnx ./
-COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/"]
-COPY ["FreakyFashion/DomainLayer.csproj", "FreakyFashion/"]
-COPY ["FreakyFashion/ApplicationLayer.csproj", "FreakyFashion/"]
-COPY ["FreakyFashion/RepositoriesDependencyInjectionProject.csproj", "FreakyFashion/"]
-COPY ["FreakyFashion/InfrastructureLayer.csproj", "FreakyFashion/"]
+COPY ["FreakyFashionAPI/FreakyFashion.csproj", "./"]
+COPY ["FreakyFashionAPI/DomainLayer.csproj", "./"]
+COPY ["FreakyFashionAPI/ApplicationLayer.csproj", "./"]
+COPY ["FreakyFashionAPI/RepositoriesDependencyInjectionProject.csproj", "./"]
+COPY ["FreakyFashionAPI/InfrastructureLayer.csproj", "./"]
 
-RUN dotnet restore "FreakyFashion/FreakyFashion.csproj"
+RUN dotnet restore "FreakyFashion.csproj"
 
 # Copy remaining source code and build
-COPY . .
+COPY FreakyFashionAPI/ .
 #WORKDIR "/src/FreakyFashion"
-RUN dotnet build "FreakyFashion/FreakyFashion.csproj" -c Release -o /app/build
+RUN dotnet build "FreakyFashion.csproj" -c Release -o /app/build
 
 # Publish Stage
 FROM build AS publish
-RUN dotnet publish "FreakyFashion/FreakyFashion.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FreakyFashion.csproj" -c Release -o /app/publish /p:UseAppHost=false
 #RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
