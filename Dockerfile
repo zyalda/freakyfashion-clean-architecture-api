@@ -22,4 +22,3 @@ EXPOSE 8080
 EXPOSE 8081
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "FreakyFashion.dll"]
-Use code with caution.
