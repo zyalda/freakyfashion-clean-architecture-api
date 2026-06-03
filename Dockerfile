@@ -19,7 +19,7 @@ COPY ["InfrastructureLayer/InfrastructureLayer.csproj", "InfrastructureLayer/"]
 RUN dotnet restore "FreakyFashion.csproj"
 
 # Copy remaining source code and build
-COPY FreakyFashionAPI/ .
+COPY FreakyFashion/ .
 #WORKDIR "/src/FreakyFashion"
 RUN dotnet build "FreakyFashion.csproj" -c Release -o /app/build
 
