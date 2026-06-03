@@ -18,7 +18,7 @@ namespace InfrastructureLayer.StorageContainerServices
         public AzureBlobService(IConfiguration configuration)
         {
             defaultAzureCredential = new DefaultAzureCredential();
-            string storageAccountName = configuration["StorageAccount:StorageName"]; //"zeenalab"
+            string storageAccountName = configuration["StorageAccount:StorageName"];
             containerName = configuration["StorageAccount:ContainerName"];
 
             // Construct the blob service endpoint URI
