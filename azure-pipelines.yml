@@ -37,7 +37,7 @@ stages:
         tags: |
           $(tag)
           latest
-        arguments: '--build-arg REGISTRY=://microsoft.com'
+        arguments: '--build-arg REGISTRY=mcr.microsoft.com'
 
     #Push the image layers to your registry
     - task: Docker@2
