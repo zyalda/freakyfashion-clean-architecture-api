@@ -2,14 +2,14 @@
 ARG REGISTRY=mcr.microsoft.com
 
 # Base Runtime Stage (Uses aspnet image)
-FROM ${REGISTRY}/dotnet/aspnet:10.0 AS base
+FROM ${REGISTRY}/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 
 # Build Stage (Uses sdk image to compile code)
-FROM ${REGISTRY}/dotnet/aspnet:10.0 AS build
+FROM ${REGISTRY}/dotnet/aspnet:8.0 AS build
 WORKDIR /src
 
-COPY *.slnx ./
+COPY FreakyFashion/*.slnx ./
 COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/"]
 COPY ["DomainLayer/DomainLayer.csproj", "DomainLayer/"]
 COPY ["ApplicationLayer/ApplicationLayer.csproj", "ApplicationLayer/"]
