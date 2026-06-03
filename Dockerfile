@@ -2,8 +2,8 @@
 #WORKDIR /src
 FROM ://microsoft.com AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+#EXPOSE 80
+#EXPOSE 443
 
 FROM ://microsoft.com AS build
 WORKDIR /src
@@ -26,7 +26,8 @@ RUN dotnet publish "FreakyFashion/FreakyFashion.csproj" -c Release -o /app/publi
 #RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 #FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
-FROM ://microsoft.com AS final
+#FROM ://microsoft.com AS final
+FROM base AS final
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
