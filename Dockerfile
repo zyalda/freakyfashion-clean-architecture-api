@@ -10,11 +10,11 @@ FROM ${REGISTRY}/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY *.slnx ./
-COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/."]
-COPY ["FreakyFashion/DomainLayer.csproj", "FreakyFashion/."]
-COPY ["FreakyFashion/ApplicationLayer.csproj", "FreakyFashion/."]
-COPY ["FreakyFashion/RepositoriesDependencyInjectionProject.csproj", "FreakyFashion/."]
-COPY ["FreakyFashion/InfrastructureLayer.csproj", "FreakyFashion/."]
+COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/"]
+COPY ["FreakyFashion/DomainLayer.csproj", "FreakyFashion/"]
+COPY ["FreakyFashion/ApplicationLayer.csproj", "FreakyFashion/"]
+COPY ["FreakyFashion/RepositoriesDependencyInjectionProject.csproj", "FreakyFashion/"]
+COPY ["FreakyFashion/InfrastructureLayer.csproj", "FreakyFashion/"]
 
 RUN dotnet restore "FreakyFashion/FreakyFashion.csproj"
 
