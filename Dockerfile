@@ -18,7 +18,7 @@ COPY ["ApplicationLayer/ApplicationLayer.csproj", "ApplicationLayer/"]
 COPY ["RepositoriesDependencyInjectionProject/RepositoriesDependencyInjectionProject.csproj", "RepositoriesDependencyInjectionProject/"]
 COPY ["InfrastructureLayer/InfrastructureLayer.csproj", "InfrastructureLayer/"]
 
-COPY ["FreakyFashionClient/FreakyFashionClient.csproj", "FreakyFashionClient/"]
+#COPY ["FreakyFashionClient/FreakyFashionClient.csproj", "FreakyFashionClient/"]
 
 # Restore the mapped projects
 RUN dotnet restore "FreakyFashion/FreakyFashion.csproj"
