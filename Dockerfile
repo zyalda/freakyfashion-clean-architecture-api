@@ -29,7 +29,7 @@ WORKDIR "/src/FreakyFashion"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FreakyFashion/FreakyFashion.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Assembling final secure container box
 FROM base AS final
