@@ -11,7 +11,7 @@ variables:
   # ACR login server!
   azureContainerRegistry: 'acrfreakyfashionapizy.azurecr.io'
 
-  #Docker image will use this repo inside Azure container registry.
+  # Docker image will use this repo inside Azure container registry.
   imageRepository: 'freakyfashionapi'
 
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
@@ -25,7 +25,7 @@ stages:
     displayName: 'Compile and Containerize Web API'
     steps:
 
-    # Step 1: Build the .NET 10 Docker image
+    # Build the .NET 10 Docker image
     - task: Docker@2
       displayName: 'Build Docker Image'
       inputs:
