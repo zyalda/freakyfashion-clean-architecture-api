@@ -16,7 +16,7 @@ COPY ["ApplicationLayer/ApplicationLayer.csproj", "ApplicationLayer/"]
 COPY ["RepositoriesDependencyInjectionProject/RepositoriesDependencyInjectionProject.csproj", "RepositoriesDependencyInjectionProject/"]
 COPY ["InfrastructureLayer/InfrastructureLayer.csproj", "InfrastructureLayer/"]
 
-RUN dotnet restore "FreakyFashion.csproj"
+RUN dotnet restore
 
 # Copy remaining source code and build
 COPY . .
