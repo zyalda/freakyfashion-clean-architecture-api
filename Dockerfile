@@ -9,7 +9,7 @@ WORKDIR /app
 FROM ${REGISTRY}/dotnet/aspnet:8.0 AS build
 WORKDIR /src
 
-COPY FreakyFashion/*.slnx ./
+COPY *.slnx ./
 COPY ["FreakyFashion/FreakyFashion.csproj", "FreakyFashion/"]
 COPY ["DomainLayer/DomainLayer.csproj", "DomainLayer/"]
 COPY ["ApplicationLayer/ApplicationLayer.csproj", "ApplicationLayer/"]
@@ -19,9 +19,9 @@ COPY ["InfrastructureLayer/InfrastructureLayer.csproj", "InfrastructureLayer/"]
 RUN dotnet restore "FreakyFashion.csproj"
 
 # Copy remaining source code and build
-COPY FreakyFashion/ .
-#WORKDIR "/src/FreakyFashion"
-RUN dotnet build "FreakyFashion.csproj" -c Release -o /app/build
+COPY . .
+WORKDIR "/src/FreakyFashion"
+RUN dotnet build -c Release -o /app/build
 
 # Publish Stage
 FROM build AS publish
