@@ -17,11 +17,12 @@ builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowScalar", policy =>
+    options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod().WithExposedHeaders("Content-Disposition"); // Important!;
     });
 });
 
@@ -30,8 +31,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-
-app.UseCors("AllowScalar");
 
 app.UseRouting();
 
