@@ -29,37 +29,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddAuthentication("Bearer")
-.AddJwtBearer(options =>
-{
-    //Try to fix Bearer error="invalid_token", error_description="The audience by hardcoding here.
-    // Direct fallback check for Azure Environment Variables
-    var issuer = builder.Configuration["Jwt:Issuer"]
-                 ?? Environment.GetEnvironmentVariable("Jwt__Issuer");
-
-    var audience = builder.Configuration["Jwt:Audience"]
-                   ?? Environment.GetEnvironmentVariable("Jwt__Audience");
-
-    var secretKey = builder.Configuration["Jwt:Key"]
-                    ?? Environment.GetEnvironmentVariable("Jwt__Key");
-
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
-
-        // 2. Validate using the forced variables
-        ValidateIssuer = true,
-        ValidIssuer = issuer,
-
-        ValidateAudience = true,
-        ValidAudience = audience,
-
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddOpenApi();
