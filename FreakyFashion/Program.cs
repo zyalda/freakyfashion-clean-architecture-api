@@ -15,13 +15,27 @@ builder.Services.AddApplicationCore();
 builder.Services.AddAuthenticationJwtBearer();
 builder.Services.AddApplicationInsightsTelemetry();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowScalar", policy =>
+    {
+        policy.WithOrigins("https://webapp-freakyfashion.azurewebsites.net/")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //Step 1
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseCors("AllowScalar");
+
 app.UseRouting();
-// Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     // 2. Skapar JSON-filen på /openapi/v1.json
