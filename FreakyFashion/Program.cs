@@ -16,7 +16,7 @@ builder.Services.AddAuthenticationJwtBearer();
 builder.Services.AddApplicationInsightsTelemetry();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//Step 1
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -26,17 +26,16 @@ app.UseRouting();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    // 2. Skapar JSON-filen på /openapi/v1.json
+    // Skapar JSON-filen på /openapi/v1.json
     app.MapOpenApi();
 
-    // 3. Startar Scalar UI på /scalar/v1
+    // Startar Scalar UI på /scalar/v1
     app.MapScalarApiReference("/scalar/v1", (options, context) =>
     {
         options.AddServer("https://webapp-freakyfashion.azurewebsites.net");
     });
 }
 
-//app.MapScalarApiReference();   // Step 2
 app.UseHttpsRedirection();
 
 //Detta måste sättas upp efter routing
