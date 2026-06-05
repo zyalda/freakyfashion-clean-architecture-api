@@ -32,10 +32,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     // 3. Startar Scalar UI på /scalar/v1
     app.MapScalarApiReference("/scalar/v1", (options, context) =>
     {
-        if (context.Request.Scheme == "https")
-        {
-            options.AddServer(new ScalarServer($"https://{context.Request.Host}"));
-        }
+        options.AddServer("https://webapp-freakyfashion.azurewebsites.net");
     });
 }
 
