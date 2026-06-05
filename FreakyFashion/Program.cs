@@ -22,7 +22,7 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 app.UseRouting();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     // 2. Skapar JSON-filen på /openapi/v1.json
     app.MapOpenApi();
