@@ -29,10 +29,15 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     // Skapar JSON-filen på /openapi/v1.json
     app.MapOpenApi();
 
+    string? apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
     // Startar Scalar UI på /scalar/v1
     app.MapScalarApiReference("/scalar/v1", (options, context) =>
     {
-        options.AddServer("https://webapp-freakyfashion.azurewebsites.net");
+        if (!string.IsNullOrEmpty(apiBaseUrl))
+        {
+            options.AddServer(apiBaseUrl);
+        }
     });
 }
 
