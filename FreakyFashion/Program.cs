@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowScalar", policy =>
     {
-        policy.WithOrigins("https://webapp-freakyfashion.azurewebsites.net/")
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
