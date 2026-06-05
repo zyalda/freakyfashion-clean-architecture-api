@@ -15,17 +15,6 @@ builder.Services.AddApplicationCore();
 builder.Services.AddAuthenticationJwtBearer();
 builder.Services.AddApplicationInsightsTelemetry();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod().WithExposedHeaders("Content-Disposition"); // Important!;
-    });
-});
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //Step 1
 builder.Services.AddOpenApi();
@@ -41,7 +30,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.MapOpenApi();
 
     // 3. Startar Scalar UI på /scalar/v1
-    app.MapScalarApiReference();
+    app.MapScalarApiReference("/scalar/v1", (options, context) =>
+    {
+        if (context.Request.Scheme == "https")
+        {
+            options.AddServer(new ScalarServer($"https://{context.Request.Host}"));
+        }
+    });
 }
 
 //app.MapScalarApiReference();   // Step 2
