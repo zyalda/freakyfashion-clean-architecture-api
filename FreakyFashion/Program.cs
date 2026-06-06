@@ -1,9 +1,7 @@
 using ApplicationLayer;
 using DomainLayer;
-using Microsoft.IdentityModel.Tokens;
 using RepositoriesDependencyInjectionProject;
 using Scalar.AspNetCore;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +12,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddRepositoriesInjection();
 builder.Services.AddApplicationCore();
-builder.Services.AddAuthenticationJwtBearer();
+builder.Services.AddAuthenticationJwtBearer(builder.Configuration);
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddCors(options =>

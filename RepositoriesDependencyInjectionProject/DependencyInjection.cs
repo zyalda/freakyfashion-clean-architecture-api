@@ -1,15 +1,16 @@
-﻿using System.Text;
-using DomainLayer.Entites;
-using ApplicationLayer.Dto;
+﻿using ApplicationLayer.Dto;
 using ApplicationLayer.Interfaces;
-using InfrastructureLayer.Mapping;
-using Microsoft.IdentityModel.Tokens;
-using InfrastructureLayer.UnitOfWorks;
-using InfrastructureLayer.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ApplicationLayer.IStorageContainerServices;
+using DomainLayer.Entites;
+using InfrastructureLayer.Mapping;
+using InfrastructureLayer.Repositories;
 using InfrastructureLayer.StorageContainerServices;
+using InfrastructureLayer.UnitOfWorks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace RepositoriesDependencyInjectionProject
 {
@@ -38,33 +39,30 @@ namespace RepositoriesDependencyInjectionProject
             return services;
         }
 
-        public static IServiceCollection AddAuthenticationJwtBearer(this IServiceCollection services)
+        public static IServiceCollection AddAuthenticationJwtBearer(this IServiceCollection services, IConfiguration configuration)
         {
-            //Add JWT Code here.
             services.AddAuthentication(opt =>
             {
-                //opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-               //Här säger vi hur vi skall jobba med JWT
-               .AddJwtBearer(opt =>
-               {
-                   opt.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       //Issuer är vem (vilken server) som utfärdat en JWT token
-                       ValidateIssuer = true,
-                       ValidateAudience = true,
-                       ValidateLifetime = true,
-                       ValidateIssuerSigningKey = true,
-                       ValidIssuer = "http://localhost:3000",
-                       ValidAudience = "http://localhost:3000",
-                       ClockSkew = TimeSpan.FromSeconds(300),
-                       IssuerSigningKey =
-                  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mykey1234567&%%485734579453%&//1255362"))
-                   };
-               });
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = configuration["Jwt:Issuer"] ?? configuration["Jwt__Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"] ?? configuration["Jwt__Audience"],
+                    ClockSkew = TimeSpan.FromSeconds(300),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                        configuration["Jwt:Key"] ?? configuration["Jwt__Key"] ?? 
+                        "mykey1234567&%%485734579453%&//1255362"))
+                };
+            });
             return services;
         }
-
     }
 }
