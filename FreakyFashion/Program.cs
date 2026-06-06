@@ -15,18 +15,6 @@ builder.Services.AddApplicationCore();
 builder.Services.AddAuthenticationJwtBearer(builder.Configuration);
 builder.Services.AddApplicationInsightsTelemetry();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy
-            .SetIsOriginAllowed(_ => true)
-            .AllowAnyHeader()
-            .AllowCredentials()
-            .AllowAnyMethod().WithExposedHeaders("Content-Disposition"); // Important!;
-    });
-});
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddOpenApi();

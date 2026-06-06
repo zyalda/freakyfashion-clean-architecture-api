@@ -58,8 +58,7 @@ namespace RepositoriesDependencyInjectionProject
                     ValidAudience = configuration["Jwt:Audience"] ?? configuration["Jwt__Audience"],
                     ClockSkew = TimeSpan.FromSeconds(300),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        configuration["Jwt:Key"] ?? configuration["Jwt__Key"] ?? 
-                        "mykey1234567&%%485734579453%&//1255362"))
+                        configuration["Jwt:Key"] ?? configuration["Jwt__Key"] ?? "mykeys1234567&%%485734579453%&//1255362"))// This hard ocdes string key is false.
                 };
             });
             return services;
