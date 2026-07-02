@@ -31,6 +31,8 @@ To eliminate development costs and guarantee environmental consistency, the appl
 
 ## Project Roadmap (In Progress)
 To maintain a transparent MVP (Minimum Viable Product) workflow, the following segments are currently under active development:
+*   [ ] **Serverless Order Automation**: Designing and implementing decoupled **Azure Functions** to asynchronously process and automate order fulfillment, inventory updates, and notifications.
 *   [ ] **Automated Test Coverage**: Implementation of isolated In-Memory database unit testing for core API controllers.
 *   [ ] **Frontend Consumer Application**: Completing a companion .NET MVC Client application designed to asynchronously consume this API and display dynamic views.
 *   [ ] **Distributed Session Management**: Moving local HttpContext sessions into an **Azure Cache for Redis** cluster to allow horizontal scaling in full Canary/Blue-Green deployments.
+*   [ ] *   [ ] **CQRS Architecture**: Future refactoring of the `ApplicationLayer` using the Command Query Responsibility Segregation pattern with MediatR for clean request/response separation.
