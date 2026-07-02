@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Dto;
 using ApplicationLayer.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace FreakyFashion.Controllers
 {
@@ -36,6 +37,21 @@ namespace FreakyFashion.Controllers
             if (user != null)
             {
                 var authenUser = authenticateUserService.GenerateToken(user);
+
+                if (authenUser != null)
+                {
+                    var autherizeSessionData = new DtoCustomer { 
+                        Id = authenUser.Id,
+                        Name = authenUser.Name,
+                        PassWord = authenUser.PassWord
+                    };
+
+                    // Serialisera och spara i sessionen
+                    string jsonTokenString = JsonSerializer.Serialize(autherizeSessionData);
+
+                    HttpContext.Session.SetString("CustomerToken", jsonTokenString);
+                }
+
                 return Ok(authenUser);
             }
             else

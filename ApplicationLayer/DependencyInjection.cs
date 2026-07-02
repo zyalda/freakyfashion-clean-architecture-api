@@ -1,5 +1,4 @@
-﻿using ApplicationLayer.Dto;
-using ApplicationLayer.IServices;
+﻿using ApplicationLayer.IServices;
 using ApplicationLayer.Services;
 using Microsoft.Extensions.DependencyInjection;
 

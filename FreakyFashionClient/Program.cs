@@ -27,7 +27,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// 2. Enable session middleware (must be placed BEFORE UseAuthorization)
+//Enable session middleware (must be placed BEFORE UseAuthorization)
 app.UseSession();
 
 app.UseAuthorization();

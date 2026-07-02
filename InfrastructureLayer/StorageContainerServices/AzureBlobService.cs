@@ -22,12 +22,12 @@ namespace InfrastructureLayer.StorageContainerServices
             containerName = configuration["StorageAccount:ContainerName"];
 
             // Construct the blob service endpoint URI
-            var uri = new Uri($"https://{storageAccountName}.blob.core.windows.net");
+            //var uri = new Uri($"https://{storageAccountName}.blob.core.windows.net");
 
             // Use DefaultAzureCredential to authenticate with Managed Identity.
-            _serviceClient = new BlobServiceClient(uri, defaultAzureCredential);
+            //_serviceClient = new BlobServiceClient(uri, defaultAzureCredential);
             //Goes to Azure Blob on life mode or to Azurite on local mode.
-            //_serviceClient = new BlobServiceClient("UseDevelopmentStorage=true");
+            _serviceClient = new BlobServiceClient("UseDevelopmentStorage=true");
         }
         public async Task<DtoBlob> UploadBlobAsync(IFormFile file)
         {

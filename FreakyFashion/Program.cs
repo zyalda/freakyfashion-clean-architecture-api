@@ -5,11 +5,18 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddFashionDataBaseContext(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();
-
 builder.Services.AddRepositoriesInjection();
 builder.Services.AddApplicationCore();
 builder.Services.AddAuthenticationJwtBearer(builder.Configuration);
@@ -42,6 +49,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+app.UseSession();
 
 //Detta måste sättas upp efter routing
 app.UseAuthentication();

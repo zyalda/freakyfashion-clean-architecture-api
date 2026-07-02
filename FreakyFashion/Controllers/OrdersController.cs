@@ -3,6 +3,7 @@ using ApplicationLayer.IServices;
 using FreakyFashion.PaginationDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace FreakyFashion.Controllers
 {
@@ -30,13 +31,24 @@ namespace FreakyFashion.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Checkout([FromBody] OrderRequest request)
-        {
+        {            
             if (request.Items == null || !request.Items.Any())
             {
                 return BadRequest(new { Message = "Your shopping cart is empty." });
             }
 
             var newOrder = await orderService.AddOrder(request);
+
+            var autherizeSessionData = new DtoOrdersOrderItems
+            {
+                Order = newOrder.Order,
+                OrderItems = newOrder.OrderItems
+            };
+
+            // Serialisera och spara i sessionen
+            string jsonTokenString = JsonSerializer.Serialize(autherizeSessionData);
+
+            HttpContext.Session.SetString("CartToken", jsonTokenString);
 
             return StatusCode(StatusCodes.Status201Created, newOrder);
         }
