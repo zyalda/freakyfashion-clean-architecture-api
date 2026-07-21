@@ -1,7 +1,9 @@
 ﻿using ApplicationLayer.Dto;
 using ApplicationLayer.IServices;
+using ApplicationLayer.IStorageContainerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
 using System.Text.Json;
 
 namespace FreakyFashion.Controllers
@@ -12,9 +14,13 @@ namespace FreakyFashion.Controllers
     public class CartController : ControllerBase
     {
         private readonly ILogger<DtoProduct> logger;
-        public CartController(ILogger<DtoProduct> logger)
+        private readonly IAzureBlobService _azureBlobService;
+        private readonly IOrderNumberService _orderNumberService;
+        public CartController(ILogger<DtoProduct> logger, IAzureBlobService azureBlobService, IOrderNumberService orderNumberService)
         {
             this.logger = logger;
+            this._azureBlobService = azureBlobService;
+            this._orderNumberService = orderNumberService;
         }
 
         [HttpGet]
@@ -30,7 +36,7 @@ namespace FreakyFashion.Controllers
 
                 if (customerToken == null)
                     return Ok("You are un authorized.");
-                int id = customerToken.Id;
+                int customerId = customerToken.Id;
 
                 var cartOrders = CartToken();
 
@@ -39,8 +45,23 @@ namespace FreakyFashion.Controllers
                     logger.LogError($"{customerToken.Name} you have not ordered yet.");
                     return Ok($"{customerToken.Name} you have not ordered yet.");
                 }
-                cartOrders.CustomerInfo.Id = id;
+
+                cartOrders.CustomerInfo.Id = customerId;
+                int orderId = cartOrders.Order.Id;
                 cartOrders.CustomerInfo.Name = customerToken.Name;
+                string generatedOrderNumber =  _orderNumberService.Generate(orderId);
+                cartOrders.OrderNumber = generatedOrderNumber;
+
+                string jsonContent = JsonSerializer.Serialize(cartOrders);
+
+                string fileName = await _azureBlobService.UploadBlobAsync(jsonContent, generatedOrderNumber);
+
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    logger.LogError($"Failed to generate order number for order ID {cartOrders.Order.Id}. Blob upload might have failed.");
+                    return BadRequest("Could not process your order. Please try again or contact support.");
+                }
+
                 return Ok(cartOrders);
             }
             catch (Exception ex)

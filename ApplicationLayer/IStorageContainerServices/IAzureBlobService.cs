@@ -6,6 +6,7 @@ namespace ApplicationLayer.IStorageContainerServices
     public interface IAzureBlobService
     {
         Task<DtoBlob> UploadBlobAsync(IFormFile file);
+        Task<string> UploadBlobAsync(string jsonContent, string orderNumber);
         Task<DtoBlob> DownloadBlobAsync(string fileName);
         Task<string> DownloadBlobSasUrl(string blobName);
     }

@@ -1,7 +1,9 @@
 ﻿using ApplicationLayer.Dto;
 using ApplicationLayer.Interfaces;
+using ApplicationLayer.IServices;
 using ApplicationLayer.IStorageContainerServices;
 using DomainLayer.Entites;
+using InfrastructureLayer;
 using InfrastructureLayer.Mapping;
 using InfrastructureLayer.Repositories;
 using InfrastructureLayer.StorageContainerServices;
@@ -16,14 +18,18 @@ namespace RepositoriesDependencyInjectionProject
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddRepositoriesInjection(this IServiceCollection services)
+        public static IServiceCollection AddRepositoriesInjection(this IServiceCollection services, IConfiguration configuration)
         {
+            // Kopplar ihop sektionen i JSON med AzureBlobSettings klass!
+            services.Configure<AzureBlobSettings>(configuration.GetSection(AzureBlobSettings.SectionName));
+
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<IAzureBlobService, AzureBlobService>();
+            services.AddScoped<IOrderNumberService, OrderNumberService>();
             services.AddScoped<IMapper<Product, DtoProduct>, AutoMapperProduct>();
             services.AddScoped<IMapper<Category, DtoCategory>, AutoMapperCategory>();
             services.AddScoped<IMapper<Customer, DtoCustomer>, AutoMapperCustomer>();

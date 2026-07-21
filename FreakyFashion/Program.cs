@@ -17,7 +17,7 @@ builder.Services.AddFashionDataBaseContext(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();
-builder.Services.AddRepositoriesInjection();
+builder.Services.AddRepositoriesInjection(builder.Configuration);
 builder.Services.AddApplicationCore();
 builder.Services.AddAuthenticationJwtBearer(builder.Configuration);
 builder.Services.AddApplicationInsightsTelemetry();

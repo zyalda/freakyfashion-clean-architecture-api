@@ -2,27 +2,32 @@
 using ApplicationLayer.IStorageContainerServices;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
+using DomainLayer.Entites;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace InfrastructureLayer.StorageContainerServices
 {
     public class AzureBlobService: IAzureBlobService
     {
-        private readonly IConfiguration configuration;
         private readonly BlobServiceClient _serviceClient;
+        private readonly string _storageAccountName;
+        private readonly string _containerName;
+        private readonly string _containerOrderName;
         private readonly string containerName = string.Empty;
-        private readonly DefaultAzureCredential defaultAzureCredential;
+        private readonly DefaultAzureCredential _defaultAzureCredential;
 
-        public AzureBlobService(IConfiguration configuration)
+        public AzureBlobService(IOptions<AzureBlobSettings> settings)
         {
-            defaultAzureCredential = new DefaultAzureCredential();
-            string storageAccountName = configuration["StorageAccount:StorageName"];
-            containerName = configuration["StorageAccount:ContainerName"];
+            _storageAccountName = settings.Value.StorageName;
+            _containerName = settings.Value.ContainerName;
+            _containerOrderName = settings.Value.OrdersContainerName;
+            _defaultAzureCredential = new DefaultAzureCredential();
 
             // Construct the blob service endpoint URI
-            //var uri = new Uri($"https://{storageAccountName}.blob.core.windows.net");
+            //var uri = new Uri($"https://{_storageAccountName}.blob.core.windows.net");
 
             // Use DefaultAzureCredential to authenticate with Managed Identity.
             //_serviceClient = new BlobServiceClient(uri, defaultAzureCredential);
@@ -32,7 +37,7 @@ namespace InfrastructureLayer.StorageContainerServices
         public async Task<DtoBlob> UploadBlobAsync(IFormFile file)
         {
             DtoBlob dtoBlob = new DtoBlob();
-            var containerClient = _serviceClient.GetBlobContainerClient(containerName);
+            var containerClient = _serviceClient.GetBlobContainerClient(_containerName);
             await containerClient.CreateIfNotExistsAsync();
 
             string fileName = file.FileName;
@@ -98,6 +103,26 @@ namespace InfrastructureLayer.StorageContainerServices
                 return sasUri.ToString();
             }
             return blobClient.Uri.ToString();
+        }
+
+        public async Task<string> UploadBlobAsync(string jsonContent, string orderNumber)
+        {
+            string fileName = $"order-{orderNumber}.json";
+
+            var containerClient = _serviceClient.GetBlobContainerClient(_containerOrderName);
+            await containerClient.CreateIfNotExistsAsync();
+
+            var blobClient = containerClient.GetBlobClient(fileName);
+
+            // Azure sparar här metadata (information om filen som ska skapas i nästa steg).
+            var options = new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = "application/json" }
+            };
+
+            await blobClient.UploadAsync(BinaryData.FromString(jsonContent), options);
+            
+            return fileName;
         }
     }
 }
