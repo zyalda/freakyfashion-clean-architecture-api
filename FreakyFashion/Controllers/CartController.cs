@@ -3,7 +3,6 @@ using ApplicationLayer.IServices;
 using ApplicationLayer.IStorageContainerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Specialized;
 using System.Text.Json;
 
 namespace FreakyFashion.Controllers
@@ -11,7 +10,7 @@ namespace FreakyFashion.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class CartController : ControllerBase
+    public class CartController : BaseController
     {
         private readonly ILogger<DtoProduct> logger;
         private readonly IAzureBlobService _azureBlobService;
@@ -70,19 +69,19 @@ namespace FreakyFashion.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        public DtoCustomer CustomerToken()
-        {
-            var jsonString = HttpContext.Session.GetString("CustomerToken");
-            if (!string.IsNullOrEmpty(jsonString))
-            {
-                // Deserialise.
-                var customerSessionData = JsonSerializer.Deserialize<DtoCustomer>(jsonString);
-                if (customerSessionData != null)
+        //public DtoCustomer CustomerToken()
+        //{
+        //    var jsonString = HttpContext.Session.GetString("CustomerToken");
+        //    if (!string.IsNullOrEmpty(jsonString))
+        //    {
+        //        // Deserialise.
+        //        var customerSessionData = JsonSerializer.Deserialize<DtoCustomer>(jsonString);
+        //        if (customerSessionData != null)
 
-                    return customerSessionData;
-            }
-            return null;
-        }
+        //            return customerSessionData;
+        //    }
+        //    return null;
+        //}
 
         public DtoOrdersOrderItems CartToken()
         {

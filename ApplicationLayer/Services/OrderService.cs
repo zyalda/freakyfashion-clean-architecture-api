@@ -112,14 +112,14 @@ namespace ApplicationLayer.Services
             return orders;
         }
 
-        public async Task<IEnumerable<DtoOrdersOrderItems>> GetOrderByCustomerId(int customerId)
+        public async Task<IEnumerable<DtoOrderListItem>> GetOrderByCustomerId(int customerId)
         {
             var ordersIncludingItems = unitOfWork.OrderRepository.GetAll().Where(x=>x.CustomerId == customerId);
 
             if (!ordersIncludingItems.Any())
                 return null;
 
-            var dtoOrdersIncludeItem = ordersIncludingItems.Select(x => new DtoOrdersOrderItems
+            var dtoOrdersIncludeItem = ordersIncludingItems.Select(x => new DtoOrderListItem
             {
                 Order = mapperUnitOfWork.Mapper<Order, DtoOrder>().MapEntity(x),
                 OrderItems = x.OrderItems.Select(i => mapperUnitOfWork.Mapper<OrderItem, DtoOrderItem>().MapEntity(i)).ToList()

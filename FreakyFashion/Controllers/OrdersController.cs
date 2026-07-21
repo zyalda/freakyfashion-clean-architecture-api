@@ -11,7 +11,7 @@ namespace FreakyFashion.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class OrdersController : ControllerBase
+    public class OrdersController : BaseController
     {
         private readonly ILogger<DtoProduct> logger;
         private readonly IOrderService orderService;
@@ -126,48 +126,55 @@ namespace FreakyFashion.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="customerid"></param>
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetOrderByCustomerId/{id}")]
+        [Route("GetOrderByCustomer")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<DtoOrdersOrderItems>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PagedResponse<DtoOrdersOrderItems>>> GetOrderByCustomerId([FromRoute] int id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResponse<DtoOrdersOrderItems>>> GetOrderByCustomer([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var orders = await orderService.GetOrderByCustomerId(id);
+                var customerToken = CustomerToken();
+
+                if (customerToken == null)
+                    return Ok("You are un authorized.");
+                int customerId = customerToken.Id;
+
+                var orders = await orderService.GetOrderByCustomerId(customerId);
 
                 if (orders == null)
                 {
-                    logger.LogError($"The order with customer id {id} not found.");
-                    return Ok($"404 The order with customer id {id} not found.");
+                    logger.LogError($"The order with customer id {customerId} not found.");
+                    return Ok($"404 The order with customer id {customerId} not found.");
                 }
 
                 int currentPage = page < 1 ? 1 : page;
                 int currentSize = pageSize < 1 ? 12 : pageSize;
 
+
                 var orderList = orders
                     .Skip((currentPage - 1) * currentSize)
-                    .Take(currentSize)
-                    .ToList();
+                    .Take(currentSize).ToList();
 
-                var ordersPagintionModel = new PagedResponse<DtoOrdersOrderItems>
+                var ordersPagintionModel = new PagedResponse<DtoOrderListItem>
                 {
+                    CustomerInfo = customerToken,
                     EntitiesDto = orderList,
                     CurrentPage = currentPage,
                     PageSize = currentSize,
                     TotalRecords = orders.Count()
                 };
+
                 return Ok(ordersPagintionModel);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Error in {nameof(orderService)} in {nameof(GetOrderByCustomerId)}");
+                logger.LogError($"Error in {nameof(orderService)} in {nameof(GetOrderByCustomer)}");
                 return BadRequest(ex.Message);
             }
         }

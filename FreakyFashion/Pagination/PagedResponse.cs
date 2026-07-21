@@ -1,7 +1,10 @@
-﻿namespace FreakyFashion.PaginationDTO
+﻿using ApplicationLayer.Dto;
+
+namespace FreakyFashion.PaginationDTO
 {
     public class PagedResponse<T> where T : class
     {
+        public DtoCustomer CustomerInfo { get; set; }
         public IEnumerable<T> EntitiesDto { get; set; } = Enumerable.Empty<T>();
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
