@@ -34,23 +34,51 @@ namespace FreakyFashion.Controllers
         {            
             if (request.Items == null || !request.Items.Any())
             {
-                return BadRequest(new { Message = "Your shopping cart is empty." });
+                return BadRequest(new { Message = "Welcome to your order. Please add items to Checkout." });
             }
 
-            var newOrder = await orderService.AddOrder(request);
+            var customerToken = CustomerToken();
+            int customerId = customerToken.Id;
+            string existingCartJson = HttpContext.Session.GetString("CartToken")!;
+            DtoOrdersOrderItems currentCart;
 
-            var autherizeSessionData = new DtoOrdersOrderItems
+            if (!string.IsNullOrEmpty(existingCartJson))
             {
-                Order = newOrder.Order,
-                OrderItems = newOrder.OrderItems
-            };
+                currentCart = JsonSerializer.Deserialize<DtoOrdersOrderItems>(existingCartJson) ?? new DtoOrdersOrderItems();
+            }
+            else
+            {
+                currentCart = new DtoOrdersOrderItems();
+            }
 
-            // Serialisera och spara i sessionen
-            string jsonTokenString = JsonSerializer.Serialize(autherizeSessionData);
+            if (currentCart.CustomerInfo != null && currentCart.CustomerInfo.Id != customerId && currentCart.Order != null && currentCart.Order.Id != 0)
+            {
+                logger.LogInformation($"Existing order found for customer  {currentCart.CustomerInfo.Id}. Appending new items.");
 
-            HttpContext.Session.SetString("CartToken", jsonTokenString);
+                //int orderId = currentCart.Order.Id;
 
-            return StatusCode(StatusCodes.Status201Created, newOrder);
+                //var newOrderResult = await orderService.AddOrder(request, customerId, orderId);
+                return BadRequest(new { Message = "Logged in customer miss match with order customer info." });
+            }
+            //else
+            //{
+            //    logger.LogInformation("No active order found. Creating a brand new checkout session.");
+            //    //var newOrderResult = await orderService.AddOrder(request, customerId, 0);
+            //    currentCart = newOrderResult;
+            //}
+
+            var newOrderResult = await orderService.AddOrderItemToCart(request, customerId);
+            var combinedItems = currentCart.OrderItems.ToList();
+            combinedItems.AddRange(newOrderResult.OrderItems);
+
+            currentCart.CustomerInfo = newOrderResult.CustomerInfo;
+            currentCart.OrderItems = combinedItems;
+            currentCart.Order.TotalAmount = combinedItems.Sum(item => item.Quantity * item.UnitPrice);
+
+            string updatedJsonTokenString = JsonSerializer.Serialize(currentCart, new JsonSerializerOptions { WriteIndented = true });
+            HttpContext.Session.SetString("CartToken", updatedJsonTokenString);
+
+            return StatusCode(StatusCodes.Status201Created, currentCart);
         }
 
         /// <summary>
@@ -214,3 +242,48 @@ namespace FreakyFashion.Controllers
         }
     }
 }
+
+/*
+
+    // 2. DIN SMARTA KONTROLL: Har vi redan kundinfo och en aktiv order? 🔎
+    if (currentCart.CustomerInfo != null && currentCart.Order != null && currentCart.Order.Id != 0)
+    {
+        _logger.LogInformation($"Existing order {currentCart.Order.Id} found for customer. Appending new items.");
+
+        // Gör om IEnumerable till en lista så vi kan lägga till de nya varorna
+        var existingItemsList = currentCart.OrderItems.ToList();
+
+        // Mappa och lägg till de nya artiklarna från requesten till den befintliga listan
+        foreach (var item in request.Items)
+        {
+            existingItemsList.Add(new DtoOrderItem 
+            { 
+                ProductId = item.ProductId, 
+                Quantity = item.Quantity,
+                Price = item.Price
+            });
+        }
+
+        // Sätt tillbaka den uppdaterade listan till din IEnumerable
+        currentCart.OrderItems = existingItemsList;
+    }
+    else
+    {
+        _logger.LogInformation("No active order found. Creating a brand new checkout session.");
+
+        // Skapa en helt ny order via din service (som sätter Kundinfo, Order och de första varorna)
+        var newOrderResult = await orderService.AddOrder(request);
+
+        currentCart.OrderNumber = newOrderResult.OrderNumber;
+        currentCart.CustomerInfo = newOrderResult.CustomerInfo;
+        currentCart.Order = newOrderResult.Order;
+        currentCart.OrderItems = newOrderResult.OrderItems;
+    }
+
+    // 3. SPARA OM: Serialisera den enda, rena DTO-strukturen tillbaka till sessionen
+    string updatedJson = JsonSerializer.Serialize(currentCart, new JsonSerializerOptions { WriteIndented = true });
+    HttpContext.Session.SetString("CartToken", updatedJson);
+
+    return StatusCode(StatusCodes.Status201Created, currentCart);
+}
+ */

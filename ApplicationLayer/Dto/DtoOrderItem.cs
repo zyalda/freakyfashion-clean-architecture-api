@@ -1,6 +1,4 @@
-﻿using DomainLayer.Entites;
-
-namespace ApplicationLayer.Dto
+﻿namespace ApplicationLayer.Dto
 {
     public class DtoOrderItem
     {

@@ -10,7 +10,7 @@
     }
     public class OrderRequest
     {
-        public int CustomerId { get; set; }
+        //public int CustomerId { get; set; }
 
         public List<ShoppingList> Items { get; set; } = new List<ShoppingList>();
     }

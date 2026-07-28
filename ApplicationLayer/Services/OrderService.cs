@@ -17,14 +17,79 @@ namespace ApplicationLayer.Services
             this.mapperUnitOfWork = mapperUnitOfWork;
         }
 
-        public async Task<DtoOrdersOrderItems> AddOrder(OrderRequest orderRequest)
+        public async Task<DtoOrdersOrderItems> AddOrderItemToCart(OrderRequest orderRequest, int customerId)
+        {
+            if (orderRequest == null || orderRequest.Items == null || !orderRequest.Items.Any())
+                return new DtoOrdersOrderItems
+                {
+                    Order = new DtoOrder { StatusMessage = "Invalid order" }
+                };
+
+            var customer = unitOfWork.CustomerRepository.GetById(customerId);
+            if (customer == null)
+                return new DtoOrdersOrderItems
+                {
+                    Order = new DtoOrder { StatusMessage = "Invalid customer" }
+                };
+
+            try
+            {
+                int computedTotal = 0;
+                var dtoList = new List<DtoOrderItem>();
+
+                foreach (var cartItem in orderRequest.Items)
+                {
+                    var verifiedProduct = unitOfWork.ProductRepository.GetById(cartItem.ProductId);
+                    if (verifiedProduct == null)
+                    {
+                        return new DtoOrdersOrderItems
+                        {
+                            Order = new DtoOrder() { StatusMessage = "Invalid Product Id" }
+                        };
+                    }
+
+                    int actualPrice = verifiedProduct.Price;
+                    computedTotal += cartItem.Quantity * actualPrice;
+
+                    var dtoItem = new DtoOrderItem
+                    {
+                        ProductId = cartItem.ProductId,
+                        Quantity = cartItem.Quantity,
+                        UnitPrice = actualPrice
+                    };
+
+                    dtoList.Add(dtoItem);
+                }
+
+                var newAddedOrder = new DtoOrdersOrderItems();
+
+                newAddedOrder.CustomerInfo.Name = customer.Name;
+                newAddedOrder.CustomerInfo.Id = customer.Id;
+                newAddedOrder.Order.Id = 0; //new order pending, not created in DB yet.
+                newAddedOrder.Order.TotalAmount = computedTotal;
+                newAddedOrder.OrderItems = dtoList;
+
+                if (newAddedOrder.Order != null)
+                {
+                    newAddedOrder.Order.StatusMessage = "The order has been updated/added successfully.";
+                }
+
+                return newAddedOrder;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<DtoOrdersOrderItems> AddOrder(OrderRequest orderRequest, int customerId) //, int orderID)
         {
             if (orderRequest == null || orderRequest.Items == null || !orderRequest.Items.Any())
                 return new DtoOrdersOrderItems { 
                     Order = new DtoOrder { StatusMessage = "Invalid order" }
                 };
 
-            var customer = unitOfWork.CustomerRepository.GetById(orderRequest.CustomerId);
+            var customer = unitOfWork.CustomerRepository.GetById(customerId);
             if(customer == null)
                 return new DtoOrdersOrderItems
                 {
@@ -37,14 +102,27 @@ namespace ApplicationLayer.Services
             
             try
             {
-                var newOrder = new Order
-                {
-                    CustomerId = orderRequest.CustomerId,
-                    TheTotal = 0
-                };
-
+                //Order order;
                 int computedTotal = 0;
 
+                //if (orderID > 0)
+                //{
+                //    order = unitOfWork.OrderRepository.GetById(orderID);
+                //    computedTotal = order.TheTotal;
+                //    order.CustomerId = customer.Id;
+                //}
+                //else
+                //{
+                   var order = new Order
+                    {
+                        CustomerId = customerId,
+                        TheTotal = 0
+                    };
+
+                    //unitOfWork.OrderRepository.Add(order);
+                    //unitOfWork.Complete();
+                //}     
+                
                 foreach (var cartItem in orderRequest.Items)
                 {
                     var verifiedProduct = unitOfWork.ProductRepository.GetById(cartItem.ProductId);
@@ -65,23 +143,36 @@ namespace ApplicationLayer.Services
                         ProductId = cartItem.ProductId,
                         Quantity = cartItem.Quantity,
                         UnitPrice = actualPrice,
-                        Order = newOrder
+                        Order = order
                     };
 
-                    newOrder.OrderItems.Add(databaseItem);
+                    order.OrderItems.Add(databaseItem);
                 }
 
-                newOrder.TheTotal = computedTotal;
+                order.TheTotal = computedTotal;
 
-                unitOfWork.OrderRepository.Add(newOrder);
+                unitOfWork.OrderRepository.Add(order);
+
                 unitOfWork.Complete();
 
                 await unitOfWork.CommitTransactionAsync();
 
-                DtoOrdersOrderItems newAddedOrder = GetOrderById(newOrder.Id).Result;
+                DtoOrdersOrderItems newAddedOrder = await GetOrderById(order.Id);
 
-                var dtoNewOrder =  mappersOrder.MapEntity(newOrder);
-                dtoNewOrder.StatusMessage = "The odrer has been added.";
+                if (newAddedOrder.CustomerInfo == null)
+                {
+                    newAddedOrder.CustomerInfo = new DtoCustomer();
+                }
+
+                newAddedOrder.CustomerInfo.Name = customer.Name;
+                newAddedOrder.CustomerInfo.Id = customer.Id;
+
+                var dtoNewOrder =  mappersOrder.MapEntity(order);
+                if (newAddedOrder.Order != null)
+                {
+                    newAddedOrder.Order.StatusMessage = "The order has been added successfully.";
+                }
+
                 return newAddedOrder;
             }
             catch (Exception ex)

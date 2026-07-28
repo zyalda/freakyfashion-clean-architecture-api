@@ -4,7 +4,8 @@ namespace ApplicationLayer.IServices
 {
     public interface IOrderService
     {
-        public Task<DtoOrdersOrderItems> AddOrder(OrderRequest orderRequest);
+        public Task<DtoOrdersOrderItems> AddOrderItemToCart(OrderRequest orderRequest, int customerId);
+        public Task<DtoOrdersOrderItems> AddOrder(OrderRequest orderRequest, int customerId);
         public IEnumerable<DtoOrdersOrderItems> GetOrders();
         public Task<DtoOrdersOrderItems> GetOrderById(int id);
         public Task<IEnumerable<DtoOrderListItem>> GetOrderByCustomerId(int customerId);

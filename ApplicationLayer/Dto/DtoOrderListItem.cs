@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ApplicationLayer.Dto
+﻿namespace ApplicationLayer.Dto
 {
     public class DtoOrderListItem
     {
