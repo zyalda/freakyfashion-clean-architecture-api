@@ -102,26 +102,13 @@ namespace ApplicationLayer.Services
             
             try
             {
-                //Order order;
                 int computedTotal = 0;
 
-                //if (orderID > 0)
-                //{
-                //    order = unitOfWork.OrderRepository.GetById(orderID);
-                //    computedTotal = order.TheTotal;
-                //    order.CustomerId = customer.Id;
-                //}
-                //else
-                //{
                    var order = new Order
                     {
                         CustomerId = customerId,
                         TheTotal = 0
-                    };
-
-                    //unitOfWork.OrderRepository.Add(order);
-                    //unitOfWork.Complete();
-                //}     
+                    };   
                 
                 foreach (var cartItem in orderRequest.Items)
                 {

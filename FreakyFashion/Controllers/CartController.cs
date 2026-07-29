@@ -47,23 +47,8 @@ namespace FreakyFashion.Controllers
                     return Ok($"{customerToken.Name} you have not ordered yet.");
                 }
                 
-                //var id = cartOrders.CustomerInfo.Id;
-                //id = customerId;
-                //int orderId = cartOrders.Order.Id;
                 cartOrders.CustomerInfo.Name = customerToken.Name;
                 cartOrders.CustomerInfo.Id = customerToken.Id;
-                //string generatedOrderNumber =  _orderNumberService.Generate(orderId);
-                //cartOrders.OrderNumber = generatedOrderNumber;
-
-                //string jsonContent = JsonSerializer.Serialize(cartOrders);
-
-                //string fileName = await _azureBlobService.UploadBlobAsync(jsonContent, generatedOrderNumber);
-
-                //if (string.IsNullOrWhiteSpace(fileName))
-                //{
-                //    logger.LogError($"Failed to generate order number for order ID {cartOrders.Order.Id}. Blob upload might have failed.");
-                //    return BadRequest("Could not process your order. Please try again or contact support.");
-                //}
 
                 return Ok(cartOrders);
             }
@@ -113,9 +98,6 @@ namespace FreakyFashion.Controllers
 
                 string updatedJsonTokenString = JsonSerializer.Serialize(newOrderResult, new JsonSerializerOptions { WriteIndented = true });
                 HttpContext.Session.SetString("CartToken", updatedJsonTokenString);
-                //var id = cartOrders.CustomerInfo.Id;
-                //id = customerId;
-                //int orderId = cartOrders.Order.Id;
                 newOrderResult.CustomerInfo.Name = customerToken.Name;
                 newOrderResult.CustomerInfo.Id = customerToken.Id;
                 string generatedOrderNumber =  _orderNumberService.Generate(newOrderResult.Order.Id);
